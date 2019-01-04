@@ -1,6 +1,6 @@
 ﻿namespace Stealer
 {
-    partial class FullscreenForm
+    partial class DebugGrid
     {
         /// <summary>
         /// Required designer variable.

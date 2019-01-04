@@ -83,42 +83,37 @@ namespace Stealer
 
         Sequence activePreset = null;
 
-        FullscreenForm fsf;
+        DebugGrid fsf;
 
         public Form1()
         {
             InitializeComponent();
-
-            appRunning = true;
-            running = false;
-
-            battlePos = new Point(-1, -1); // 20 x 11 (63x49 each);
-
-            //this.GotFocus += Form1_GotFocus;
-            this.FormClosing += Form1_FormClosing;
-            this.FormClosed += Form1_FormClosed;
-            this.MouseClick += Form1_MouseClick;
-
-            this.btnUpdate.Click += BtnUpdate_Click;
-
-            btnUpdateTooltip.SetToolTip(btnUpdate,
-                "Force updating the process list to find EBF 5.\n" +
-                "Also draw a Debug Grid to assist finding clicking location.\n" +
-                "Click on the square at bottom-right to close the grid.");
-
-
-            //running = true;
-
-            thread = new Thread(new ThreadStart(run));
-            thread.Start();
-
 
             numOffsX.Maximum = new decimal(Values.bw * 0.5f);
             numOffsX.Minimum = new decimal(Values.bw * -0.5f);
             numOffsY.Maximum = new decimal(Values.bh * 0.5f);
             numOffsY.Minimum = new decimal(Values.bh * -0.5f);
 
-            fsf = new FullscreenForm
+            cbTarget.SelectedIndex = 2;
+            init(2);
+            btnUpdate.Visible = false;
+
+            
+            btnUpdateTooltip.SetToolTip(btnUpdate,
+                "Force updating the process list to find EBF 5.\n" +
+                "Also draw a Debug Grid to assist finding clicking location.\n" +
+                "Click on the square at bottom-right to close the grid.");
+
+            
+            appRunning = true;
+            running = false;
+
+            thread = new Thread(new ThreadStart(run));
+            thread.Start();
+
+
+
+            fsf = new DebugGrid
             {
                 StartPosition = FormStartPosition.Manual
             };
@@ -126,14 +121,12 @@ namespace Stealer
             //fsf.ShowDialog(this);
             //fsf.Visible = false;
 
-            this.cbTarget.SelectedIndex = 2;
-            init(2);
-            btnUpdate.Visible = false;
-        }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //Application.Exit();
+            //this.GotFocus += Form1_GotFocus;
+            this.FormClosing += Form1_FormClosing;
+            this.MouseClick += Form1_MouseClick;
+
+            this.btnUpdate.Click += BtnUpdate_Click;
         }
 
         private void BtnUpdate_Click(object sender, EventArgs e)
@@ -146,15 +139,15 @@ namespace Stealer
                 RECT wndRect = new RECT();
                 GetWindowRect(ebf5.MainWindowHandle, ref wndRect);
                 ebf5Pos = new Point(wndRect.Left + 1, wndRect.Top + 25);
-                fsf.SafeInvoke((FullscreenForm f) => { f.Location = new Point(ebf5Pos.X + 1, ebf5Pos.Y + 1); }); // TODO: hack?;
-                //fsf.Location = new Point(ebf5Pos.X + 1, ebf5Pos.Y + 1);
+                //fsf.SafeInvoke((DebugGrid f) => { f.Location = new Point(ebf5Pos.X + 1, ebf5Pos.Y + 1); }); // TODO: hack?;
+                fsf.Location = new Point(ebf5Pos.X + 1, ebf5Pos.Y + 1);
             }
             processes = null;
 
             this.Visible = false;
             fsf.visible = true;
             DialogResult ds = DialogResult.No;
-            fsf.SafeInvoke((FullscreenForm f) => { ds = f.ShowDialog(this); });
+            fsf.SafeInvoke((DebugGrid f) => { ds = f.ShowDialog(this); });
 
             if (ds == DialogResult.OK)
             {

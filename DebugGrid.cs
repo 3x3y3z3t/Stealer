@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Stealer
 {
-    public partial class FullscreenForm : Form
+    public partial class DebugGrid : Form
     {
         public struct Line
         {
@@ -42,7 +42,7 @@ namespace Stealer
         public bool visible; // TODO: hack;
         Thread thread;
 
-        public FullscreenForm()
+        public DebugGrid()
         {
             InitializeComponent();
 
@@ -147,7 +147,7 @@ namespace Stealer
                         coord.offsX = rp.X - ((coord.x + 0.5f) * Values.bw);
                         coord.offsY = rp.Y - ((coord.y + 0.5f) * Values.bh);
 
-                        this.SafeInvoke((FullscreenForm form) => { form.Invalidate(); });
+                        this.SafeInvoke((DebugGrid form) => { form.Invalidate(); });
                     }
                 }
                 Thread.Sleep(16);
