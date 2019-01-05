@@ -447,6 +447,7 @@ namespace Stealer
                 //SuspendLayout();
                 //this.ClientSize = new Size(374, 541);
                 //ResumeLayout(true);
+                btnStart.Enabled = false;
                 init(-1);
             }
             else
@@ -454,6 +455,7 @@ namespace Stealer
                 SuspendLayout();
                 panel1.Visible = false;
                 this.ClientSize = new Size(374, 222);
+                btnStart.Enabled = true;
                 ResumeLayout(true);
                 switch (cbTarget.SelectedIndex)
                 {
@@ -494,7 +496,8 @@ namespace Stealer
             {
                 Text = "Readme",
                 MaximizeBox = false,
-                MinimizeBox = false
+                MinimizeBox = false,
+                FormBorderStyle = FormBorderStyle.FixedSingle
             };
             rm.SuspendLayout();
             rm.ClientSize = new Size(800, 450);

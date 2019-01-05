@@ -17,12 +17,11 @@ namespace Stealer
     partial class Form1
     {
         const string rmstring = @"
- 
  Stealer v1.2 by Arime-chan, readme file.
  
  This is an autoclicker, aim for assisting in steal-farming in Matt Roszak's game ""Epic Battle Fantasy 5"".
- Depends on autoskills(on equipments), weather effects, and computer speed, each steal(from entering the battle
-     to ecscaping to map) takes at least 15 seconds(if steal 2 times), allow you to farm nearly 500 items per hour.
+ Depends on autoskills on equipments, weather effects, and computer speed, each steal (from entering the battle
+     to ecscaping to map) takes at least 15 seconds (if steal 2 times), allow you to farm nearly 500 items per hour.
  
  ===== USAGE NOTICE =====
  Despite an assist tool, it still need your ""assist"" to be able to operate properly.
@@ -50,7 +49,6 @@ namespace Stealer
      themselves.
  - (Maybe) implement the feature allow user to setup a custom sequence to farm everywhere. This will require more
      explaination for how to setup one.
- 
 ";
     }
 }
