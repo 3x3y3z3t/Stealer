@@ -1,6 +1,5 @@
 ﻿// ;
 using Exw.ClickerCore;
-using Stealer.AdditionalLibraries;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;

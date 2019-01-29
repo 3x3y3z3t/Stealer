@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using static Exw.ClickerCore.Action;
 
 namespace Exw.ClickerCore
 {
@@ -26,14 +25,6 @@ namespace Exw.ClickerCore
 
         [DllImport("User32.dll")]
         public static extern bool GetWindowRect(IntPtr _hWnd, ref RECT _rect);
-
-        // DWMAPI -> HRESULT -> long -> int;
-        // HWND -> int*;
-        // DWORD -> ulong;
-        // PVOID -> ref RECT (hack);
-        //[DllImport("Dwmapi.dll")]
-        //public static extern long DwmGetWindowAttribute(IntPtr _hwnd, int _dwAttribute, ref RECT _pvAttribute, int _cbAttribute);
-        //private const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
         #endregion
 
         public const string CLICKER_CORE_VERSION = "1.3";
@@ -108,8 +99,6 @@ namespace Exw.ClickerCore
                     target = processes[0];
                     RECT wndRect = new RECT();
                     GetWindowRect(target.MainWindowHandle, ref wndRect);
-                    //DwmGetWindowAttribute(target.MainWindowHandle, DWMWA_EXTENDED_FRAME_BOUNDS, ref wndRect, Marshal.SizeOf(typeof(RECT)));
-                    //Console.WriteLine("X = " + wndRect.Left + " Y = " + wndRect.Top + " X = " + wndRect.Right + " Y = " + wndRect.Bottom);
                     targetArea = new Rectangle(wndRect.Left + 3, wndRect.Top + 27, wndRect.Right - wndRect.Left - 6, wndRect.Bottom - wndRect.Top - 29);
                     processes = null;
                     //Console.WriteLine(target == null);
@@ -198,32 +187,6 @@ namespace Exw.ClickerCore
             return true;
         }
 
-        //public bool AddClick(int _button = 0x0002, int _index = -1)
-        //{
-        //    if (_index > Sequence.Count)
-        //        return false;
-        //    else if (_index >= 0)
-        //        Sequence.Insert(_index, new ClickAction(_button));
-        //    else
-        //        Sequence.Add(new ClickAction(_button));
-        //    if (_index >= 0 && _index <= seqIndex)
-        //        ++seqIndex;
-        //    return true;
-        //}
-
-        //public bool AddMove(int _x, int _y, int _index = -1)
-        //{
-        //    if (_index > sequence.Count)
-        //        return false;
-        //    else if (_index >= 0)
-        //        sequence.Insert(_index, new MoveAction(_x, _y));
-        //    else
-        //        sequence.Add(new MoveAction(_x, _y));
-        //    if (_index >= 0 && _index <= seqIndex)
-        //        ++seqIndex;
-        //    return true;
-        //}
-
         public bool AddDelay(uint _delay = 17, int _index = -1)
         {
             if (_index > Sequence.Count)
@@ -255,7 +218,7 @@ namespace Exw.ClickerCore
             return Add(new MoveAction(_x, _y), _index);
         }
 
-        public bool AddMove(ActionBehavior<Point> _behavior, int _index = -1)
+        public bool AddMove(Action.ActionBehavior<Point> _behavior, int _index = -1)
         {
             return Add(new MoveAction(_behavior), _index);
         }
@@ -270,22 +233,22 @@ namespace Exw.ClickerCore
             return Add(new ClickAction(_counter, _button), _index);
         }
 
-        public bool AddClick(ActionBehavior<bool> _behavior, int _button = (int)ClickAction.ButtonMask.BTN_LEFT, int _index = -1)
+        public bool AddClick(Action.ActionBehavior<bool> _behavior, int _button = (int)ClickAction.ButtonMask.BTN_LEFT, int _index = -1)
         {
             return Add(new ClickAction(_behavior, _button), _index);
         }
 
-        public bool AddClick(ActionBehavior<bool> _behavior, uint _counter, int _button = (int)ClickAction.ButtonMask.BTN_LEFT, int _index = -1)
+        public bool AddClick(Action.ActionBehavior<bool> _behavior, uint _counter, int _button = (int)ClickAction.ButtonMask.BTN_LEFT, int _index = -1)
         {
             return Add(new ClickAction(_behavior, _counter, _button), _index);
         }
 
-        public bool AddDelay(ActionBehavior<int> _behavior, int _index = -1)
+        public bool AddDelay(Action.ActionBehavior<int> _behavior, int _index = -1)
         {
             return Add(new DelayAction(_behavior), _index);
         }
 
-        public bool AddCustom(ActionBehavior _behavior, int _index = -1)
+        public bool AddCustom(Action.ActionBehavior _behavior, int _index = -1)
         {
             return Add(new CustomAction(_behavior), _index);
         }
