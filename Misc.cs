@@ -12,20 +12,17 @@ namespace Stealer
 
         public static float bw = cx / gw;
         public static float bh = cy / gh;
-    }
 
-    partial class Form1
-    {
-        const string rmstring = @"
- 
- Stealer v1.2 by Arime-chan, readme file.
+        public const string rmstring =
+            @"Stealer v2.1 by Arime-chan, readme file.
  
  This is an autoclicker, aim for assisting in steal-farming in Matt Roszak's game ""Epic Battle Fantasy 5"".
  Depends on autoskills(on equipments), weather effects, and computer speed, each steal(from entering the battle
      to ecscaping to map) takes at least 15 seconds(if steal 2 times), allow you to farm nearly 500 items per hour.
  
  ===== USAGE NOTICE =====
- Despite an assist tool, it still need your ""assist"" to be able to operate properly.
+ Despite an assist tool, you still need to set things up a bit for it to be able to operate properly.
+ - Important: SAVE BEFORE STAR STEALING.
  - Important: Move the tool window so that it don't cover/overlap any click positions. 
  - The tool will occupy your mouse but don't block it, which means you can not use your computer when auto-stealing,
      but you can still move your mouse. However, doing that may compromise the generated click position, causing Matt 
@@ -46,11 +43,10 @@ namespace Stealer
      (Or just simply close the tool.)
  
  ===== WHAT'S NEXT =====
- - Add tooltip on everything so you don't have to read this readme if you want. Almost everything tell what they are
-     themselves.
+ - Add tooltip on everything so you don't have to read this readme if you don'twant. Almost everything tell what they 
+     are themselves.
  - (Maybe) implement the feature allow user to setup a custom sequence to farm everywhere. This will require more
      explaination for how to setup one.
- 
 ";
     }
 }

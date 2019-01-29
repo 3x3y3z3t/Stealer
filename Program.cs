@@ -15,7 +15,8 @@ namespace Stealer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 f = new Form1();
+            //Form1 f = new Form1();
+            Stealer f = new Stealer();
             Application.Run(f);
 
 

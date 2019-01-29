@@ -92,7 +92,7 @@ namespace Stealer
             appRunning = true;
             running = false;
 
-            battlePos = new Point(-1, -1); // 20 x 11 (63x49 each);
+            //battlePos = new Point(-1, -1); // 20 x 11 (63x49 each);
 
             //this.GotFocus += Form1_GotFocus;
             this.FormClosing += Form1_FormClosing;
@@ -493,7 +493,7 @@ namespace Stealer
                 Multiline = true,
                 ReadOnly = true,
                 ScrollBars = ScrollBars.Vertical,
-                Text = rmstring
+                Text = Values.rmstring
             };
             tb.Select(0, 0);
 
