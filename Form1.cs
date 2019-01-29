@@ -73,11 +73,9 @@ namespace Stealer
 
         bool appRunning;
         bool running;
-
-        bool fastmode = true;
         bool stealmore = false;
         Thread thread;
-        
+
         Process ebf5;
         Point ebf5Pos;
 
@@ -88,36 +86,6 @@ namespace Stealer
         public Form1()
         {
             InitializeComponent();
-
-            appRunning = true;
-            running = false;
-
-            battlePos = new Point(-1, -1); // 20 x 11 (63x49 each);
-
-            //this.GotFocus += Form1_GotFocus;
-            this.FormClosing += Form1_FormClosing;
-            this.FormClosed += Form1_FormClosed;
-            this.MouseClick += Form1_MouseClick;
-
-            this.btnUpdate.Click += BtnUpdate_Click;
-
-            btnUpdateTooltip.SetToolTip(btnUpdate,
-                "Force updating the process list to find EBF 5.\n" +
-                "Also draw a Debug Grid to assist finding clicking location.\n" +
-                "Click on the square at bottom-right to close the grid.");
-
-
-            //running = true;
-
-            thread = new Thread(new ThreadStart(run));
-            thread.Start();
-
-
-            numOffsX.Maximum = new decimal(Values.bw * 0.5f);
-            numOffsX.Minimum = new decimal(Values.bw * -0.5f);
-            numOffsY.Maximum = new decimal(Values.bh * 0.5f);
-            numOffsY.Minimum = new decimal(Values.bh * -0.5f);
-
             fsf = new FullscreenForm
             {
                 StartPosition = FormStartPosition.Manual
@@ -126,9 +94,25 @@ namespace Stealer
             //fsf.ShowDialog(this);
             //fsf.Visible = false;
 
-            this.cbTarget.SelectedIndex = 2;
+            this.cbTarget.SelectedIndex = 1;
             init(2);
             btnUpdate.Visible = false;
+
+            this.FormClosing += Form1_FormClosing;
+            this.FormClosed += Form1_FormClosed;
+            this.MouseClick += Form1_MouseClick;
+            this.btnUpdate.Click += BtnUpdate_Click;
+            
+            btnUpdateTooltip.SetToolTip(btnUpdate,
+                "Force updating the process list to find EBF 5.\n" +
+                "Also draw a Debug Grid to assist finding clicking location.\n" +
+                "Click on the square at bottom-right to close the grid.");
+
+            appRunning = true;
+            running = false;
+
+            thread = new Thread(new ThreadStart(run));
+            thread.Start();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -176,24 +160,21 @@ namespace Stealer
             running = false;
         }
 
-        private void Form1_GotFocus(object sender, EventArgs e)
+        private void Form1_Activated(object sender, EventArgs e)
         {
             //Console.WriteLine("Got Focus!");
             running = false;
         }
 
-        const int gw = 0, gh = 0;
+        //const int gw = 0, gh = 0;
 
         public void run()
         {
             UInt64 overallCounter = 0UL;
-            UInt64 sessionCounter = 0UL;
             ebf5 = null;
             ebf5Pos = new Point();
             while (appRunning)
             {
-                sessionCounter = 0UL;
-                
                 while (running)
                 {
                     if (ebf5 == null)
@@ -201,7 +182,7 @@ namespace Stealer
                         Process[] processes = Process.GetProcessesByName("Epic Battle Fantasy 5");
                         if (processes.Length == 1)
                         {
-                            Console.WriteLine("found!");
+                            //Console.WriteLine("found!");
                             ebf5 = processes[0];
                             RECT wndRect = new RECT();
                             GetWindowRect(ebf5.MainWindowHandle, ref wndRect);
@@ -228,7 +209,11 @@ namespace Stealer
                         if (!steal())
                             break;
                         else
+                        {
                             ++overallCounter;
+                            lblCount.SafeInvoke(delegate (Label lbl)
+                            { lbl.Text = "Overall Count: " + overallCounter; });
+                        }
 
                         // ===== 3 =====
                         if (stealmore)
@@ -236,23 +221,19 @@ namespace Stealer
                             if (!steal_more())
                                 break;
                             else
+                            { 
                                 ++overallCounter;
-                        }
+                                lblCount.SafeInvoke(delegate (Label lbl)
+                                { lbl.Text = "Overall Count: " + overallCounter; });}
+                            }
 
                         // ===== 4 =====
                         if (!ecscape())
                             break;
-
-
-                        //++sessionCounter;
-
-                        lblCount.SafeInvoke(delegate (Label lbl)
-                        { lbl.Text = "Overall Count: " + overallCounter; });
                     }
                 }
                 Thread.Sleep(100);
             }
-
         }
 
         void init(int _preset = -1)
@@ -287,9 +268,7 @@ namespace Stealer
                     activePreset.CanStealMore = true;
                     break;
                 }
-
             }
-            
         }
 
         bool engage()
@@ -364,33 +343,12 @@ namespace Stealer
 
         void move_cursor_to_pos(float _x, float _y, float _dur = 1000.0f)
         {
-            if (fastmode)
-            {
-                Cursor.Position = new Point((int)_x + 1, (int)_y + 1);
-                Thread.Sleep(10);
-                Cursor.Position = new Point((int)_x - 1, (int)_y - 1);
-                Thread.Sleep(10);
-                Cursor.Position = new Point((int)_x, (int)_y);
-                Thread.Sleep(50);
-            }
-            else
-            {
-                // ***** BROKEN *****   
-                //while (Math.Abs(MouseSimulator.X - _x) > 5.0f || Math.Abs(MouseSimulator.Y - _y) > 5.0f)
-                //{
-                //    float segm = _dur / 10f;
-                //    PointF curPos = MouseSimulator.Position;
-                //    float moveX = (_x - curPos.X) / segm;
-                //    float moveY = (_y - curPos.Y) / segm;
-
-                //    for (int i = 0; i < segm; ++i)
-                //    {
-                //        Thread.Sleep(10);
-                //        MouseSimulator.X += (int)(moveX);
-                //        MouseSimulator.Y += (int)(moveY);
-                //    }
-                //}
-            }
+            //Cursor.Position = new Point((int)_x + 1, (int)_y + 1);
+            //Thread.Sleep(10);
+            Cursor.Position = new Point((int)_x - 1, (int)_y - 1);
+            Thread.Sleep(10);
+            Cursor.Position = new Point((int)_x, (int)_y);
+            Thread.Sleep(50);
         }
 
         void move_cursor_to_square(int _x, int _y, float offsX = 0.0f, float offsY = 0.0f, float _dur = 1000.0f)
@@ -399,8 +357,6 @@ namespace Stealer
                 (int)((_x - 0.5f) * Values.bw + ebf5Pos.X + 1 + offsX),
                 (int)((_y - 0.5f) * Values.bh + ebf5Pos.Y + 26 + offsY),
                 _dur);
-
-
         }
 
         bool try_click()
@@ -410,11 +366,9 @@ namespace Stealer
 
             while (!should_click())
                 Thread.Sleep(50);
-            
-            // press the button;
-            mouse_event(0x02, 0, 0, 0, 0);
-            // release the button;
-            mouse_event(0x04, 0, 0, 0, 0);
+
+            mouse_event(0x02, 0, 0, 0, 0); // press the button;
+            mouse_event(0x04, 0, 0, 0, 0); // release the button;
             return true;
         }
 
@@ -434,47 +388,27 @@ namespace Stealer
             {
                 return false;
             }
-
-            //if (Cursor.Handle == (IntPtr)65567)
-            //    return true;
-            //else
-            //    return false;
-        }
-
-        private void checkFastMode_CheckedChanged(object sender, EventArgs e)
-        {
-            fastmode = checkFastMode.Checked;
         }
 
         private void cbTarget_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbTarget.SelectedIndex == 0)
+            SuspendLayout();
+            ResumeLayout(true);
+            switch (cbTarget.SelectedIndex)
             {
-                //panel1.Visible = true;
-                //SuspendLayout();
-                //this.ClientSize = new Size(374, 541);
-                //ResumeLayout(true);
-                init(-1);
-            }
-            else
-            {
-                SuspendLayout();
-                panel1.Visible = false;
-                this.ClientSize = new Size(374, 222);
-                ResumeLayout(true);
-                switch (cbTarget.SelectedIndex)
+                case 0:
                 {
-                    case 1:
-                    {
-                        init(1);
-                        break;
-                    }
-                    case 2:
-                    {
-                        init(2);
-                        break;
-                    }
+                    init(1);
+                    break;
                 }
+                case 1:
+                {
+                    init(2);
+                    break;
+                }
+                default:
+                    init(-1);
+                    break;
             }
         }
 
@@ -493,7 +427,7 @@ namespace Stealer
                 Multiline = true,
                 ReadOnly = true,
                 ScrollBars = ScrollBars.Vertical,
-                Text = rmstring
+                Text = Values.rmstring
             };
             tb.Select(0, 0);
 
